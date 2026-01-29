@@ -9,7 +9,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.serialization.Serializable
 
-private const val BASE_URL = "${NetworkConstants.BASE_URL}/auth"
+private const val BASE_URL = "${NetworkConstants.BASE_URL}/v1/auth"
 
 class TokenRefresher(
     private val httpClient: HttpClient

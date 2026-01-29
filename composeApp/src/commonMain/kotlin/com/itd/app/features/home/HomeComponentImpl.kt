@@ -9,11 +9,13 @@ import com.arkivanov.decompose.router.slot.dismiss
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.router.stack.pushToFront
 import com.arkivanov.decompose.value.Value
 import com.itd.app.core.decompose.BaseComponent
 import com.itd.app.features.feed.ui.FeedComponent
+import com.itd.app.features.hashtag.HashtagPostsComponent
 import com.itd.app.features.notifications.ui.NotificationComponent
 import com.itd.app.features.post.ui.fullpost.FullPostComponent
 import com.itd.app.features.profile.api.ProfileRepository
@@ -31,16 +33,20 @@ class HomeComponentImpl(
     private val searchComponentFactory: SearchComponent.Factory,
     private val notificationComponentFactory: NotificationComponent.Factory,
     private val profileComponentFactory: ProfileComponent.Factory,
-    private val fullPostComponentFactory: FullPostComponent.Factory
+    private val fullPostComponentFactory: FullPostComponent.Factory,
+    private val hashtagPostsComponentFactory: HashtagPostsComponent.Factory
 ) : HomeComponent, BaseComponent<HomeState>(componentContext, HomeState.serializer()) {
     init {
         componentScope.launch {
-            profileRepository.getMe().onSuccess { user ->
-                updateState {
-                    it.copy(
-                        profileAvatar = user.avatar,
-                        profileUsername = user.username
-                    )
+            for (i in 0 until 3) {
+                profileRepository.getMe().onSuccess { user ->
+                    updateState {
+                        it.copy(
+                            profileAvatar = user.avatar,
+                            profileUsername = user.username
+                        )
+                    }
+                    break
                 }
             }
         }
@@ -88,7 +94,7 @@ class HomeComponentImpl(
     }
 
     override fun onHidePost() {
-        slotNavigation.dismiss(onComplete = { println(it) })
+        slotNavigation.dismiss()
     }
 
     private fun createPagesChild(
@@ -132,11 +138,41 @@ class HomeComponentImpl(
             }
 
             is Config.Search -> {
-                HomeComponent.ChildTabs.Search(searchComponentFactory.create(context))
+                HomeComponent.ChildTabs.Search(
+                    searchComponentFactory.create(
+                        context,
+                        onOpenHashtag = { navigation.pushNew(Config.Hashtag(it)) },
+                        onOpenUser = { navigation.pushNew(Config.Profile(it)) }
+                    )
+                )
             }
 
             is Config.Notifications -> {
                 HomeComponent.ChildTabs.Notifications(notificationComponentFactory.create(context))
+            }
+
+            is Config.Hashtag -> {
+                HomeComponent.ChildTabs.Hashtag(
+                    hashtagPostsComponentFactory.create(
+                        context,
+                        hashtag = config.hashtag,
+                        onOpenUser = {
+                            navigation.pushNew(Config.Profile(it))
+                        },
+                        onRepost = {
+
+                        },
+                        onOpenPost = {
+                            slotNavigation.activate(HomeComponentImpl.PostSlot(it))
+                        },
+                        onOpenHashtag = {
+                            navigation.pushNew(Config.Hashtag(it))
+                        },
+                        onBack = {
+                            navigation.pop()
+                        }
+                    )
+                )
             }
         }
     }
@@ -170,9 +206,13 @@ class HomeComponentImpl(
         object Notifications : Config()
 
         @Serializable
-        data class Profile(val username: String) : Config()
+        class Profile(val username: String) : Config()
 
+        @Serializable
         data object MeProfile : Config()
+
+        @Serializable
+        class Hashtag(val hashtag: String) : Config()
     }
 
     @Serializable

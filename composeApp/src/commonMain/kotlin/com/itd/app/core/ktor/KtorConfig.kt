@@ -26,8 +26,8 @@ internal val KtorJson = Json {
     ignoreUnknownKeys = true
 }
 
-internal class HttpEngineFactory {
-    fun createEngine(): HttpClientEngineFactory<HttpClientEngineConfig> = CIO
+internal expect class HttpEngineFactory() {
+    fun createEngine(): HttpClientEngineFactory<HttpClientEngineConfig>
 }
 
 fun <T : HttpClientEngineConfig> HttpClientConfig<T>.commonConfig() {

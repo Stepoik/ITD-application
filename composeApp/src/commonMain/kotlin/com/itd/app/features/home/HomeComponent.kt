@@ -6,6 +6,7 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.itd.app.core.decompose.Component
 import com.itd.app.features.feed.ui.FeedComponent
+import com.itd.app.features.hashtag.HashtagPostsComponent
 import com.itd.app.features.notifications.ui.NotificationComponent
 import com.itd.app.features.post.ui.fullpost.FullPostComponent
 import com.itd.app.features.profile.ui.ProfileComponent
@@ -22,6 +23,7 @@ interface HomeComponent : Component<HomeState> {
         data class Notifications(val component: NotificationComponent) : ChildTabs()
         data class MeProfile(val component: ProfileComponent) : ChildTabs()
         data class Profile(val component: ProfileComponent) : ChildTabs()
+        data class Hashtag(val component: HashtagPostsComponent) : ChildTabs()
     }
 
     sealed class ChildSlots {

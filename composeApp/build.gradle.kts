@@ -31,6 +31,7 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.client.okhttp)
             implementation("org.mozilla.geckoview:geckoview:147.0.20260105210555")
         }
         commonMain.dependencies {

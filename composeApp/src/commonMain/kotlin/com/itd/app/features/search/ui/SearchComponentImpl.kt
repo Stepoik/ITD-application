@@ -25,7 +25,9 @@ class SearchComponentImpl(
     componentContext: ComponentContext,
     private val trendsRepository: TrendsRepository,
     private val usersRepository: UsersRepository,
-    private val searchRepository: SearchRepository
+    private val searchRepository: SearchRepository,
+    private val onOpenUser: (String) -> Unit,
+    private val onOpenHashtag: (String) -> Unit,
 ) : SearchComponent,
     BaseComponent<SearchComponentState>(componentContext, SearchComponentState.serializer()) {
 
@@ -41,8 +43,17 @@ class SearchComponentImpl(
     }
 
     override fun initialState() = SearchComponentState()
+
     override fun onTextChanged(text: SerializableTextFieldValue) {
         updateState { it.copy(searchText = text) }
+    }
+
+    override fun onOpenUser(username: String) {
+        onOpenUser.invoke(username.drop(1))
+    }
+
+    override fun onOpenHashtag(hashtag: String) {
+        onOpenHashtag.invoke(hashtag.drop(1))
     }
 
     private suspend fun search(searchText: String) {
@@ -109,8 +120,12 @@ class SearchComponentImpl(
     }
 
     class Factory : SearchComponent.Factory, KoinComponent {
-        override fun create(componentContext: ComponentContext): SearchComponent {
-            return getKoin().get { parametersOf(componentContext) }
+        override fun create(
+            componentContext: ComponentContext,
+            onOpenUser: (String) -> Unit,
+            onOpenHashtag: (String) -> Unit,
+        ): SearchComponent {
+            return getKoin().get { parametersOf(componentContext, onOpenUser, onOpenHashtag) }
         }
     }
 

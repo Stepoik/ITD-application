@@ -129,7 +129,7 @@ private fun LazyListScope.foundHashTags(
         ChapterTitle("Хэштеги")
     }
     items(foundHashtags, key = { it.id }) {
-        HashtagItem(it, onClick = {})
+        HashtagItem(it, onClick = { component.onOpenHashtag(it.name) })
     }
 }
 
@@ -141,7 +141,7 @@ private fun LazyListScope.foundUsers(
         ChapterTitle("Пользователи")
     }
     items(foundUsers, key = { it.id }) {
-        UsersItem(it, onClick = {})
+        UsersItem(it, onClick = { component.onOpenUser(it.username) })
     }
 }
 
@@ -153,7 +153,7 @@ private fun LazyListScope.popularHashTags(
         ChapterTitle("Популярные хэштеги")
     }
     items(popularHashtags, key = { it.id }) {
-        HashtagItem(it, onClick = {})
+        HashtagItem(it, onClick = { component.onOpenHashtag(it.name) })
     }
 }
 
@@ -165,7 +165,7 @@ private fun LazyListScope.popularUsers(
         ChapterTitle("Кого читать")
     }
     items(popularUsers, key = { it.id }) {
-        UsersItem(it, onClick = {})
+        UsersItem(it, onClick = { component.onOpenUser(it.username) })
     }
 }
 

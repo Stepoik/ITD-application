@@ -18,6 +18,8 @@ import com.itd.app.features.feed.ui.FeedComponent
 import com.itd.app.features.feed.ui.FeedComponentImpl
 import com.itd.app.features.feed.ui.list.PostsListComponent
 import com.itd.app.features.feed.ui.list.PostsListComponentImpl
+import com.itd.app.features.hashtag.HashtagPostsComponent
+import com.itd.app.features.hashtag.HashtagPostsComponentImpl
 import com.itd.app.features.home.HomeComponent
 import com.itd.app.features.home.HomeComponentImpl
 import com.itd.app.features.notifications.api.NotificationRepository
@@ -79,6 +81,9 @@ val feedModule = module {
     componentOf(::FeedComponentImpl) bind FeedComponent::class
     componentFactory<PostsListComponent.Factory> { PostsListComponentImpl.Factory() }
     componentFactory<FeedComponent.Factory> { FeedComponentImpl.Factory() }
+
+    componentOf(::HashtagPostsComponentImpl) bind HashtagPostsComponent::class
+    componentFactory<HashtagPostsComponent.Factory> { HashtagPostsComponentImpl.Factory() }
 }
 
 val homeModule = module {

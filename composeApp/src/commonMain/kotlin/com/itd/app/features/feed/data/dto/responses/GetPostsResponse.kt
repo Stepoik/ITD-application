@@ -27,12 +27,12 @@ data class PostDto(
     val isLiked: Boolean,
     val isOwner: Boolean,
     val isReposted: Boolean,
-    val isViewed: Boolean,
+    val isViewed: Boolean = false,
     val likesCount: Int,
     val originalPost: PostReferenceDto?,
     val repostsCount: Int,
     val viewsCount: Int,
-    val wallRecipientId: String?,
+    val wallRecipientId: String? = null,
     val attachments: List<AttachmentDto>
 )
 

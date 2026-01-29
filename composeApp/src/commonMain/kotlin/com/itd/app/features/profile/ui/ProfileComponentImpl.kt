@@ -3,9 +3,11 @@ package com.itd.app.features.profile.ui
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
 import com.itd.app.core.decompose.BaseComponent
+import com.itd.app.core.decompose.asFlow
 import com.itd.app.features.profile.ui.components.liked.ProfileLikedPostsComponent
 import com.itd.app.features.profile.ui.components.posts.ProfilePostsComponent
 import com.itd.app.features.profile.ui.components.profileInfo.ProfileInfoComponent
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.parameter.parametersOf
 
@@ -19,7 +21,6 @@ class ProfileComponentImpl(
     private val profilePostsComponentFactory: ProfilePostsComponent.Factory,
     private val profileLikedPostsComponentFactory: ProfileLikedPostsComponent.Factory
 ) : ProfileComponent, BaseComponent<ProfileState>(componentContext, ProfileState.serializer()) {
-    override fun initialState() = ProfileState()
 
     override val profileInfo: ProfileInfoComponent =
         profileInfoComponentFactory.create(
@@ -43,6 +44,16 @@ class ProfileComponentImpl(
                 onOpenPost = onOpenPost,
                 onRepost = onRepost
             )
+
+    init {
+        componentScope.launch {
+            profileInfo.state.asFlow().collect { profileInfoState ->
+                updateState { it.copy(isLoading = profileInfoState.isLoading) }
+            }
+        }
+    }
+
+    override fun initialState() = ProfileState()
 
     class Factory : ProfileComponent.Factory, KoinComponent {
         override fun create(

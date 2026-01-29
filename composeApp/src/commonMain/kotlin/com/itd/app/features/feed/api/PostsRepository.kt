@@ -1,5 +1,6 @@
 package com.itd.app.features.feed.api
 
+import com.itd.app.features.feed.api.models.HashtagPosts
 import com.itd.app.features.feed.api.models.LikeStatus
 import com.itd.app.features.feed.api.models.Post
 import com.itd.app.features.feed.api.models.PostsType
@@ -15,4 +16,6 @@ interface PostsRepository {
     suspend fun likePost(postId: String, like: Boolean): Result<LikeStatus>
 
     suspend fun getPostById(postId: String): Result<Post>
+
+    suspend fun getPostsByHashtag(hashtag: String, lastPostId: String?): Result<HashtagPosts>
 }

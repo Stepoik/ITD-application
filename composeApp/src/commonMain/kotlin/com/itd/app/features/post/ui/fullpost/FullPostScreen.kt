@@ -21,15 +21,13 @@ import com.itd.app.uikit.components.BaseScaffold
 import com.itd.app.uikit.components.DefaultHorizontalDivider
 import com.itd.app.uikit.components.verticalSpacer
 
-private const val POSTS_PAGINATION_THRESHOLD = 5
-
 @Composable
 fun FullPostScreen(component: FullPostComponent) {
     val commentsState = component.commentComponent.state.subscribeAsState().value
     val lazyState = rememberLazyListState()
     LaunchedEffect(Unit) {
-        snapshotFlow { lazyState.firstVisibleItemIndex + lazyState.layoutInfo.visibleItemsInfo.size }.collect {
-            if (it > commentsState.comments.size - POSTS_PAGINATION_THRESHOLD) {
+        snapshotFlow { lazyState.canScrollForward }.collect {
+            if (!it) {
                 component.commentComponent.onLoadNext()
             }
         }

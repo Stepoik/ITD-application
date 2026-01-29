@@ -2,9 +2,11 @@ package com.itd.app.features.feed.data
 
 import com.itd.app.core.ktor.NetworkConstants
 import com.itd.app.features.feed.api.PostsRepository
+import com.itd.app.features.feed.api.models.HashtagPosts
 import com.itd.app.features.feed.api.models.LikeStatus
 import com.itd.app.features.feed.api.models.Post
 import com.itd.app.features.feed.api.models.PostsType
+import com.itd.app.features.feed.data.dto.responses.GetHashtagPostsResponse
 import com.itd.app.features.feed.data.dto.responses.GetPostResponse
 import com.itd.app.features.feed.data.dto.responses.GetPostsResponse
 import com.itd.app.features.feed.data.dto.responses.LikeStatusResponse
@@ -87,6 +89,24 @@ class PostsRepositoryImpl(
         return runCatching {
             httpClient.get("$BASE_URL/$postId")
                 .body<GetPostResponse>().data.toDomain()
+        }
+    }
+
+    override suspend fun getPostsByHashtag(
+        hashtag: String,
+        lastPostId: String?
+    ): Result<HashtagPosts> {
+        return runCatching {
+            val body = httpClient.get("${NetworkConstants.BASE_URL}/hashtags/$hashtag/posts") {
+                parameter("limit", PAGE_SIZE)
+                lastPostId?.let {
+                    parameter("cursor", lastPostId)
+                }
+            }.body<GetHashtagPostsResponse>()
+            HashtagPosts(
+                posts = body.data.posts.map { it.toDomain() },
+                postsCount = body.data.hashtag.postsCount
+            )
         }
     }
 

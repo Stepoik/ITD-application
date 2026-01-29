@@ -7,7 +7,15 @@ import com.itd.app.core.utils.SerializableTextFieldValue
 interface SearchComponent : Component<SearchComponentState> {
     fun onTextChanged(text: SerializableTextFieldValue)
 
+    fun onOpenUser(username: String)
+
+    fun onOpenHashtag(hashtag: String)
+
     interface Factory {
-        fun create(componentContext: ComponentContext): SearchComponent
+        fun create(
+            componentContext: ComponentContext,
+            onOpenUser: (String) -> Unit,
+            onOpenHashtag: (String) -> Unit,
+        ): SearchComponent
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.itd.app.features.feed.ui.Feed
+import com.itd.app.features.hashtag.HashtagPostsScreen
 import com.itd.app.features.notifications.ui.NotificationsScreen
 import com.itd.app.features.post.ui.fullpost.FullPostScreen
 import com.itd.app.features.profile.ui.ProfileScreen
@@ -60,6 +61,9 @@ fun HomeScreen(component: HomeComponent) {
                 }
                 is HomeComponent.ChildTabs.Notifications -> {
                     NotificationsScreen(instance.component)
+                }
+                is HomeComponent.ChildTabs.Hashtag -> {
+                    HashtagPostsScreen(instance.component)
                 }
             }
         }

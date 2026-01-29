@@ -55,7 +55,11 @@ fun PostItem(
             modifier = Modifier.fillMaxWidth()
         )
         if (post.content.isNotEmpty()) {
-            Text(post.content)
+            Text(
+                post.content,
+                style = ITDTheme.typography.body,
+                color = ITDTheme.colors.onBackground
+            )
         }
         post.originalPost?.let {
             PostReferenceView(it)

@@ -38,9 +38,9 @@ private fun authInterceptor(
             val newAccessToken = mutex.withLock {
                 val currentTokens = tokenHolder.getTokens()
                 val newTokens = if (currentTokens == tokens) {
-                    currentTokens
-                } else {
                     refresher.refresh(refresh)
+                } else {
+                    currentTokens
                 }
                 tokenHolder.setTokens(newTokens)
                 newTokens?.accessToken!!
