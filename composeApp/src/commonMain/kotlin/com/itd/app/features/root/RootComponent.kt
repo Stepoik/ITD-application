@@ -5,6 +5,7 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.itd.app.features.auth.ui.AuthComponent
 import com.itd.app.features.home.HomeComponent
+import com.itd.app.features.splash.SplashComponent
 
 interface RootComponent {
     val stack: Value<ChildStack<*, Child>>
@@ -13,6 +14,8 @@ interface RootComponent {
         data class Auth(val component: AuthComponent) : Child()
 
         data class Home(val component: HomeComponent) : Child()
+
+        data class Splash(val component: SplashComponent) : Child()
     }
 
     interface Factory {

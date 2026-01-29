@@ -11,6 +11,10 @@ interface FullPostComponent : Component<FullPostState> {
     val commentComponent: CommentsComponent
 
     interface Factory {
-        fun create(componentContext: ComponentContext, postId: String): FullPostComponent
+        fun create(
+            componentContext: ComponentContext,
+            postId: String,
+            onOpenUser: (String) -> Unit,
+        ): FullPostComponent
     }
 }

@@ -48,6 +48,8 @@ import com.itd.app.features.search.api.SearchRepository
 import com.itd.app.features.search.data.SearchRepositoryImpl
 import com.itd.app.features.search.ui.SearchComponent
 import com.itd.app.features.search.ui.SearchComponentImpl
+import com.itd.app.features.splash.SplashComponent
+import com.itd.app.features.splash.SplashComponentImpl
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.qualifier
@@ -142,6 +144,9 @@ val postModule = module {
 val rootModule = module {
     componentOf(::RootComponentImpl) bind RootComponent::class
     componentFactory<RootComponent.Factory> { RootComponentImpl.Factory() }
+
+    componentOf(::SplashComponentImpl) bind SplashComponent::class
+    componentFactory<SplashComponent.Factory> { SplashComponentImpl.Factory() }
     includes(
         networkModule,
         persistenceModule,

@@ -24,6 +24,10 @@ interface CommentsComponent : Component<CommentsState> {
     fun onSendCommentClicked()
 
     interface Factory {
-        fun create(componentContext: ComponentContext, postId: String): CommentsComponent
+        fun create(
+            componentContext: ComponentContext,
+            postId: String,
+            onOpenUser: (String) -> Unit
+        ): CommentsComponent
     }
 }

@@ -55,15 +55,24 @@ class HomeComponentImpl(
         source = navigation,
         serializer = Config.serializer(),
         initialConfiguration = Config.Feed,
-        childFactory = ::createPagesChild
+        childFactory = ::createPagesChild,
+        handleBackButton = true
     )
 
     override val postSlot: Value<ChildSlot<*, HomeComponent.ChildSlots>> = childSlot(
         source = slotNavigation,
         serializer = PostSlot.serializer(),
+        handleBackButton = true,
         childFactory = { config, context ->
             HomeComponent.ChildSlots.Post(
-                fullPostComponentFactory.create(context, config.postId)
+                fullPostComponentFactory.create(
+                    context,
+                    postId = config.postId,
+                    onOpenUser = {
+                        slotNavigation.dismiss()
+                        navigation.pushNew(Config.Profile(it))
+                    }
+                )
             )
         }
     )

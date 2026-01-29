@@ -20,7 +20,7 @@ fun LazyListScope.profilePosts(state: ProfilePostsState, component: ProfilePosts
                 { component.onLikeClicked(it.id) },
                 { component.onCommentClicked(it.id) },
                 { component.onRepostClicked(it.id) },
-                { component.onOpenUser(it.id) }
+                { component.onOpenUser(it.author.username) }
             )
             HorizontalDivider(Modifier.fillMaxWidth().height(1.dp), color = ITDTheme.colors.divider)
         }

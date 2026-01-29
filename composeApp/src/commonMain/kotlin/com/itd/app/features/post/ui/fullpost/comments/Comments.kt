@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
@@ -32,7 +31,6 @@ import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withLink
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Text
 import com.itd.app.core.utils.SerializableTextFieldValue
@@ -63,7 +61,9 @@ fun LazyListScope.comments(component: CommentsComponent, state: CommentsState) {
                             origCommentId = origComment.id,
                             repliesTo = origComment.author.toRepliesTo()
                         )
-                    })
+                    },
+                    onOpenUser = component::onOpenUser
+                )
                 VerticalSpacer(12.dp)
             }
         }
@@ -72,12 +72,16 @@ fun LazyListScope.comments(component: CommentsComponent, state: CommentsState) {
                 Column(Modifier.padding(horizontal = 16.dp).padding(start = 40.dp)) {
                     DefaultHorizontalDivider(thickness = 1.dp, Modifier.fillMaxWidth())
                     VerticalSpacer(12.dp)
-                    CommentItem(it, onAnswerClicked = {
-                        component.onAnswerClicked(
-                            origCommentId = origComment.id,
-                            repliesTo = it.author.toRepliesTo()
-                        )
-                    })
+                    CommentItem(
+                        it,
+                        onAnswerClicked = {
+                            component.onAnswerClicked(
+                                origCommentId = origComment.id,
+                                repliesTo = it.author.toRepliesTo()
+                            )
+                        },
+                        onOpenUser = component::onOpenUser
+                    )
                     VerticalSpacer(12.dp)
                 }
             }
@@ -128,7 +132,11 @@ fun LazyListScope.comments(component: CommentsComponent, state: CommentsState) {
 }
 
 @Composable
-private fun CommentItem(comment: CommentVO, onAnswerClicked: () -> Unit) {
+private fun CommentItem(
+    comment: CommentVO,
+    onAnswerClicked: () -> Unit,
+    onOpenUser: (String) -> Unit
+) {
     val commentText = buildAnnotatedString {
         if (comment.repliesTo != null) {
             val style = TextLinkStyles(
@@ -140,7 +148,7 @@ private fun CommentItem(comment: CommentVO, onAnswerClicked: () -> Unit) {
             )
             val annotation = LinkAnnotation.Clickable(
                 "ACTION", styles = style, linkInteractionListener = {
-                    println("YO ${comment.repliesTo.username}")
+                    onOpenUser(comment.repliesTo.username)
                 })
             withLink(annotation) {
                 append("${comment.repliesTo.displayName}, ")

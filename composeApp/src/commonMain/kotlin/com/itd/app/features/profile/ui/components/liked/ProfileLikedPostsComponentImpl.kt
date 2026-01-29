@@ -43,7 +43,7 @@ class ProfileLikedPostsComponentImpl(
     }
 
     override fun onOpenUser(username: String) {
-        onUserClicked.invoke(username)
+        onUserClicked.invoke(username.drop(1))
     }
 
     override fun onLikeClicked(postId: String) {

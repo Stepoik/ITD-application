@@ -14,6 +14,7 @@ class CommentsComponentImpl(
     componentContext: ComponentContext,
     private val commentsRepository: CommentsRepository,
     private val postId: String,
+    private val onOpenUser: (String) -> Unit
 ) : CommentsComponent, BaseComponent<CommentsState>(componentContext, CommentsState.serializer()) {
     init {
         onLoadNext()
@@ -80,7 +81,7 @@ class CommentsComponentImpl(
     }
 
     override fun onOpenUser(username: String) {
-        TODO("Not yet implemented")
+        onOpenUser.invoke(username)
     }
 
     override fun onClearAnswerRepliesTo(origCommentId: String) {
@@ -181,8 +182,12 @@ class CommentsComponentImpl(
     }
 
     class Factory : CommentsComponent.Factory, KoinComponent {
-        override fun create(componentContext: ComponentContext, postId: String): CommentsComponent {
-            return getKoin().get { parametersOf(componentContext, postId) }
+        override fun create(
+            componentContext: ComponentContext,
+            postId: String,
+            onOpenUser: (String) -> Unit
+        ): CommentsComponent {
+            return getKoin().get { parametersOf(componentContext, postId, onOpenUser) }
         }
     }
 }

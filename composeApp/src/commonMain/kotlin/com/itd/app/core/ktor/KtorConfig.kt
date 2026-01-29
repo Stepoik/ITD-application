@@ -11,6 +11,7 @@ import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
@@ -36,7 +37,7 @@ fun <T : HttpClientEngineConfig> HttpClientConfig<T>.commonConfig() {
     HttpResponseValidator {
         validateResponse { response ->
             val statusCode = response.status
-            if (statusCode.value in 400..499) {
+            if (statusCode.value in 400..499 && statusCode != HttpStatusCode.Unauthorized) {
                 throw ClientRequestException(response, "Client error ${statusCode.value}")
             }
             if (statusCode.value >= 500) {

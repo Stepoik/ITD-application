@@ -69,8 +69,6 @@ class SearchComponentImpl(
                 updateState {
                     it.copy(popularHashtags = tagsVo)
                 }
-            }.onFailure {
-                println(it)
             }
 
             topUsersJob.await().onSuccess { topUsers ->

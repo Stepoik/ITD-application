@@ -15,13 +15,18 @@ class FullPostComponentImpl(
     componentContext: ComponentContext,
     private val postInfoComponentFactory: PostInfoComponent.Factory,
     private val commentsComponentFactory: CommentsComponent.Factory,
-    private val postId: String
+    private val postId: String,
+    private val onOpenUser: (String) -> Unit,
 ) : FullPostComponent, BaseComponent<FullPostState>(componentContext, FullPostState.serializer()) {
     override val postInfoComponent: PostInfoComponent =
         postInfoComponentFactory.create(childContext("post_info"), postId)
 
     override val commentComponent: CommentsComponent =
-        commentsComponentFactory.create(childContext("comments"), postId)
+        commentsComponentFactory.create(
+            childContext("comments"),
+            postId = postId,
+            onOpenUser = onOpenUser
+        )
 
     init {
         componentScope.launch {
@@ -39,8 +44,12 @@ class FullPostComponentImpl(
     override fun initialState() = FullPostState()
 
     class Factory : FullPostComponent.Factory, KoinComponent {
-        override fun create(componentContext: ComponentContext, postId: String): FullPostComponent {
-            return getKoin().get { parametersOf(componentContext, postId) }
+        override fun create(
+            componentContext: ComponentContext,
+            postId: String,
+            onOpenUser: (String) -> Unit,
+        ): FullPostComponent {
+            return getKoin().get { parametersOf(componentContext, postId, onOpenUser) }
         }
     }
 }

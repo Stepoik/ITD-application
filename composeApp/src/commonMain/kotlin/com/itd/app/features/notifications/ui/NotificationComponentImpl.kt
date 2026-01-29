@@ -36,8 +36,6 @@ class NotificationComponentImpl(
                         val mentions = notifications.filter { it.type == NotificationType.REPLY }
                         it.copy(allNotifications = notifications, mentions = mentions, isLoading = false)
                     }
-                }.onFailure {
-                    println(it)
                 }
         }
     }
