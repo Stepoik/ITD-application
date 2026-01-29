@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+  "name": "Cookie Bridge",
+  "version": "1.0.0",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "cookie-bridge@example.com",
+      "strict_min_version": "68.0"
+    }
+  },
+  "permissions": [
+    "cookies",
+    "<all_urls>",
+    "nativeMessaging",
+    "nativeMessagingFromContent",
+    "geckoViewAddons"
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  }
+}
