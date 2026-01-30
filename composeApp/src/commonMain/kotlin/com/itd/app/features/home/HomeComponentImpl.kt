@@ -18,6 +18,7 @@ import com.itd.app.features.feed.ui.FeedComponent
 import com.itd.app.features.hashtag.HashtagPostsComponent
 import com.itd.app.features.notifications.ui.NotificationComponent
 import com.itd.app.features.post.ui.fullpost.FullPostComponent
+import com.itd.app.features.post.ui.new.NewPostComponent
 import com.itd.app.features.profile.api.ProfileRepository
 import com.itd.app.features.profile.ui.ProfileComponent
 import com.itd.app.features.search.ui.SearchComponent
@@ -34,7 +35,8 @@ class HomeComponentImpl(
     private val notificationComponentFactory: NotificationComponent.Factory,
     private val profileComponentFactory: ProfileComponent.Factory,
     private val fullPostComponentFactory: FullPostComponent.Factory,
-    private val hashtagPostsComponentFactory: HashtagPostsComponent.Factory
+    private val hashtagPostsComponentFactory: HashtagPostsComponent.Factory,
+    private val newPostComponentFactory: NewPostComponent.Factory
 ) : HomeComponent, BaseComponent<HomeState>(componentContext, HomeState.serializer()) {
     init {
         componentScope.launch {
@@ -77,6 +79,8 @@ class HomeComponentImpl(
                     onOpenUser = {
                         slotNavigation.dismiss()
                         navigation.pushNew(Config.Profile(it))
+                    },
+                    onRepost = {
                     }
                 )
             )
@@ -95,6 +99,10 @@ class HomeComponentImpl(
 
     override fun onHidePost() {
         slotNavigation.dismiss()
+    }
+
+    override fun onNewPostClicked() {
+        navigation.pushNew(Config.NewPost())
     }
 
     private fun createPagesChild(
@@ -160,7 +168,6 @@ class HomeComponentImpl(
                             navigation.pushNew(Config.Profile(it))
                         },
                         onRepost = {
-
                         },
                         onOpenPost = {
                             slotNavigation.activate(HomeComponentImpl.PostSlot(it))
@@ -169,6 +176,17 @@ class HomeComponentImpl(
                             navigation.pushNew(Config.Hashtag(it))
                         },
                         onBack = {
+                            navigation.pop()
+                        }
+                    )
+                )
+            }
+
+            is Config.NewPost -> {
+                HomeComponent.ChildTabs.NewPost(
+                    newPostComponentFactory.create(
+                        context,
+                        onClose = {
                             navigation.pop()
                         }
                     )
@@ -213,6 +231,9 @@ class HomeComponentImpl(
 
         @Serializable
         class Hashtag(val hashtag: String) : Config()
+
+        @Serializable
+        class NewPost : Config()
     }
 
     @Serializable

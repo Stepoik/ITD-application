@@ -34,9 +34,32 @@ class HashtagPostsComponentImpl(
     }
 
     override fun onLike(postId: String) {
-        TODO("LIKE")
-        componentScope.launch {
-//            postsRepository.likePost(postId)
+        componentScope.launch(Dispatchers.Default) {
+            val posts = state.value.posts
+            val post = posts.find { it.id == postId } ?: return@launch
+            if (post.isLiked) {
+                updatePost(postId = postId, likesCount = post.likesCount - 1, liked = !post.isLiked)
+            } else {
+                updatePost(postId = postId, likesCount = post.likesCount + 1, liked = !post.isLiked)
+            }
+            postsRepository.likePost(postId = postId, like = !post.isLiked).onFailure {
+                updatePost(postId = postId, likesCount = post.likesCount, liked = post.isLiked)
+            }
+        }
+    }
+
+    private fun updatePost(postId: String, likesCount: Int, liked: Boolean) {
+        // TODO Вынести в какой-то общий компонент, пока впадлу
+        updateState {
+            val posts = it.posts.map {
+                if (it.id == postId) {
+                    it.copy(
+                        likesCount = likesCount,
+                        isLiked = liked
+                    )
+                } else it
+            }
+            it.copy(posts = posts)
         }
     }
 

@@ -16,10 +16,6 @@ class CommentsComponentImpl(
     private val postId: String,
     private val onOpenUser: (String) -> Unit
 ) : CommentsComponent, BaseComponent<CommentsState>(componentContext, CommentsState.serializer()) {
-    init {
-        onLoadNext()
-    }
-
     override fun initialState() = CommentsState()
 
     override fun onLoadNext() {

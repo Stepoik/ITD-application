@@ -18,6 +18,7 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.util.AttributeKey
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -107,6 +108,14 @@ class PostsRepositoryImpl(
                 posts = body.data.posts.map { it.toDomain() },
                 postsCount = body.data.hashtag.postsCount
             )
+        }
+    }
+
+    override suspend fun createNewPost(content: String): Result<Any?> {
+        return runCatching {
+            httpClient.post(BASE_URL) {
+                setBody(mapOf("content" to content))
+            }
         }
     }
 

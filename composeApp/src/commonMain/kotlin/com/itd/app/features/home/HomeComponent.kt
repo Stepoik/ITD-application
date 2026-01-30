@@ -9,6 +9,7 @@ import com.itd.app.features.feed.ui.FeedComponent
 import com.itd.app.features.hashtag.HashtagPostsComponent
 import com.itd.app.features.notifications.ui.NotificationComponent
 import com.itd.app.features.post.ui.fullpost.FullPostComponent
+import com.itd.app.features.post.ui.new.NewPostComponent
 import com.itd.app.features.profile.ui.ProfileComponent
 import com.itd.app.features.search.ui.SearchComponent
 
@@ -24,6 +25,7 @@ interface HomeComponent : Component<HomeState> {
         data class MeProfile(val component: ProfileComponent) : ChildTabs()
         data class Profile(val component: ProfileComponent) : ChildTabs()
         data class Hashtag(val component: HashtagPostsComponent) : ChildTabs()
+        data class NewPost(val component: NewPostComponent) : ChildTabs()
     }
 
     sealed class ChildSlots {
@@ -33,6 +35,8 @@ interface HomeComponent : Component<HomeState> {
     fun onSelectTab(tabIndex: Int)
 
     fun onHidePost()
+
+    fun onNewPostClicked()
 
     interface Factory {
         fun create(componentContext: ComponentContext): HomeComponent

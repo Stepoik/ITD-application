@@ -4,7 +4,17 @@ import com.arkivanov.decompose.ComponentContext
 import com.itd.app.core.decompose.Component
 
 interface PostInfoComponent : Component<PostInfoState> {
+    fun onLike()
+
+    fun onRepost()
+
+    fun onComment()
+
     interface Factory {
-        fun create(componentContext: ComponentContext, postId: String): PostInfoComponent
+        fun create(
+            componentContext: ComponentContext,
+            postId: String,
+            onRepost: (String) -> Unit
+        ): PostInfoComponent
     }
 }

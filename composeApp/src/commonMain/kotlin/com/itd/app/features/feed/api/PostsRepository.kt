@@ -18,4 +18,6 @@ interface PostsRepository {
     suspend fun getPostById(postId: String): Result<Post>
 
     suspend fun getPostsByHashtag(hashtag: String, lastPostId: String?): Result<HashtagPosts>
+
+    suspend fun createNewPost(content: String): Result<Any?>
 }

@@ -34,6 +34,8 @@ import com.itd.app.features.post.ui.fullpost.comments.CommentsComponent
 import com.itd.app.features.post.ui.fullpost.comments.CommentsComponentImpl
 import com.itd.app.features.post.ui.fullpost.postinfo.PostInfoComponent
 import com.itd.app.features.post.ui.fullpost.postinfo.PostInfoComponentImpl
+import com.itd.app.features.post.ui.new.NewPostComponent
+import com.itd.app.features.post.ui.new.NewPostComponentImpl
 import com.itd.app.features.profile.api.ProfileRepository
 import com.itd.app.features.profile.data.ProfileRepositoryImpl
 import com.itd.app.features.profile.ui.ProfileComponent
@@ -142,6 +144,9 @@ val postModule = module {
 
     componentOf(::CommentsComponentImpl) bind CommentsComponent::class
     componentFactory<CommentsComponent.Factory> { CommentsComponentImpl.Factory() }
+
+    componentOf(::NewPostComponentImpl) bind NewPostComponent::class
+    componentFactory<NewPostComponent.Factory> { NewPostComponentImpl.Factory() }
 
     single<CommentsRepository> { CommentsRepositoryImpl(get(AUTHORIZED_KTOR_QUALIFIER)) }
 }

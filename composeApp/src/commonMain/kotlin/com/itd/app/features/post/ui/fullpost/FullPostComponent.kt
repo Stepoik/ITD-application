@@ -15,6 +15,7 @@ interface FullPostComponent : Component<FullPostState> {
             componentContext: ComponentContext,
             postId: String,
             onOpenUser: (String) -> Unit,
+            onRepost: (String) -> Unit
         ): FullPostComponent
     }
 }

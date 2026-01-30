@@ -20,7 +20,7 @@ class SplashComponentImpl(
     BaseComponent<EmptyState>(componentContext, serializer = EmptyState.serializer()) {
     init {
         componentScope.launch {
-            profileRepository.getMe()
+            profileRepository.getProfile("holop300")
             if (tokenHolder.tokens.firstOrNull() == null) {
                 onNavigateSignIn()
             } else {

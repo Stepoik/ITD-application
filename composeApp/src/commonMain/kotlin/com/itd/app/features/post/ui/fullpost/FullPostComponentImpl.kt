@@ -6,7 +6,9 @@ import com.itd.app.core.decompose.BaseComponent
 import com.itd.app.core.decompose.asFlow
 import com.itd.app.features.post.ui.fullpost.comments.CommentsComponent
 import com.itd.app.features.post.ui.fullpost.postinfo.PostInfoComponent
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.parameter.parametersOf
@@ -17,9 +19,14 @@ class FullPostComponentImpl(
     private val commentsComponentFactory: CommentsComponent.Factory,
     private val postId: String,
     private val onOpenUser: (String) -> Unit,
+    private val onRepost: (String) -> Unit,
 ) : FullPostComponent, BaseComponent<FullPostState>(componentContext, FullPostState.serializer()) {
     override val postInfoComponent: PostInfoComponent =
-        postInfoComponentFactory.create(childContext("post_info"), postId)
+        postInfoComponentFactory.create(
+            childContext("post_info"),
+            postId = postId,
+            onRepost = onRepost
+        )
 
     override val commentComponent: CommentsComponent =
         commentsComponentFactory.create(
@@ -30,14 +37,13 @@ class FullPostComponentImpl(
 
     init {
         componentScope.launch {
-            combine(
-                postInfoComponent.state.asFlow(),
-                commentComponent.state.asFlow()
-            ) { postState, commentsState ->
-                postState.isLoading && commentsState.isLoading
-            }.collect { isLoading ->
-                updateState { it.copy(isLoading = isLoading) }
+            postInfoComponent.state.asFlow().collect { postInfo ->
+                updateState { it.copy(isLoading = postInfo.isLoading) }
             }
+        }
+        componentScope.launch {
+            state.asFlow().takeWhile { it.isLoading }.collect()
+            commentComponent.onLoadNext()
         }
     }
 
@@ -48,8 +54,9 @@ class FullPostComponentImpl(
             componentContext: ComponentContext,
             postId: String,
             onOpenUser: (String) -> Unit,
+            onRepost: (String) -> Unit
         ): FullPostComponent {
-            return getKoin().get { parametersOf(componentContext, postId, onOpenUser) }
+            return getKoin().get { parametersOf(componentContext, postId, onOpenUser, onRepost) }
         }
     }
 }

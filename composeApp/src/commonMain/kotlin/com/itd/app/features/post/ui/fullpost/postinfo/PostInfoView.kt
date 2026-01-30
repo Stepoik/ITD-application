@@ -54,9 +54,9 @@ fun LazyListScope.postInfoView(component: PostInfoComponent) {
                 DefaultHorizontalDivider(thickness = 1.dp, modifier = Modifier.fillMaxWidth())
                 PostActions(
                     post,
-                    onCommentClicked = {},
-                    onLikeClicked = { },
-                    onRepostClicked = {},
+                    onCommentClicked = component::onComment,
+                    onLikeClicked = component::onLike,
+                    onRepostClicked = component::onRepost,
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp)
                 )
                 DefaultHorizontalDivider(thickness = 1.dp, modifier = Modifier.fillMaxWidth())
